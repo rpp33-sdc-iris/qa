@@ -1,0 +1,24 @@
+{
+  "name": "qa",
+  "version": "1.0.0",
+  "description": "SDC - question and answers",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest test --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpp33-sdc-iris/qa.git"
+  },
+  "author": "Bhrigu Joshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpp33-sdc-iris/qa/issues"
+  },
+  "homepage": "https://github.com/rpp33-sdc-iris/qa#readme",
+  "dependencies": {
+    "eslint": "^8.11.0",
+    "jest": "^27.5.1",
+    "npm": "^8.5.5"
+  }
+}
