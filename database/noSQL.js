@@ -1,5 +1,5 @@
-let questions = mongoose.Schema({
-  id: { "bsonType": "uuid" },
+const questions = mongoose.Schema({
+  id: { bsonType: 'uuid' },
   product_id: Number,
   question_id: Number,
   question_body: String,
@@ -9,8 +9,8 @@ let questions = mongoose.Schema({
   reported: Boolean,
 });
 
-let answers = mongoose.Schema({
-  id: { "bsonType": "uuid" },
+const answers = mongoose.Schema({
+  id: { bsonType: 'uuid' },
   question_id: Number,
   answer_id: Number,
   body: String,
@@ -19,8 +19,8 @@ let answers = mongoose.Schema({
   helpfulness: Number,
 });
 
-let photos = mongoose.Schema({
-  id: { "bsonType": "uuid" },
+const photos = mongoose.Schema({
+  id: { bsonType: 'uuid' },
   answer_id: Number,
   photos: String,
 });
