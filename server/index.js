@@ -23,7 +23,7 @@ readFile('./data/questions.csv', 'utf8', (questionsErr, questionsdata) => {
   if (questionsErr) throw questionsErr;
   readFile('./data/answers_copy.csv', 'utf8', (answersErr, answersData) => {
     if (answersErr) throw answersErr.message;
-    readFile('./data/answers_photos.csv', 'utf8', (photosErr, photosData) => {
+    readFile('./data/answers_photos_copy.csv', 'utf8', (photosErr, photosData) => {
       if (photosErr) throw photosErr;
       parseCSV(questionsdata, answersData, photosData);
     });

@@ -1,44 +1,43 @@
 const allQuestion = [];
 
-function findQuestionIndex(questionsArray, answer) {
-  if (questionsArray.length > 0) {
-    const questionIndex = questionsArray.findIndex(
-      (element) => element.question_id === answer[1],
-    );
-    return questionIndex;
-  }
-  return -1;
-}
-
 function findExistingProductIndex(item, string) {
   if (string === 'question') {
-    if (allQuestion.length > 0) {
-      const productIndex = allQuestion.findIndex(
-        (element) => element.product_id === item[1],
+    const productIndex = allQuestion.findIndex(
+      (element) => element.product_id === item[1],
+    );
+    return productIndex;
+  }
+
+  if (string === 'answer') {
+    const productIndex = allQuestion.findIndex(
+      (product) => product.results.some((question) => question.question_id === item[1]),
+    );
+    const questionIndex = allQuestion[productIndex].results.findIndex(
+      (question) => question.question_id === item[1],
+    );
+    return [productIndex, questionIndex];
+  }
+
+  if (string === 'answer-photos') {
+    const productIndex = allQuestion.findIndex(
+      (product) => product.results.some((question) => Object.keys(question.answers).some(
+        (id) => id === item[1],
+      )),
+    );
+    if (productIndex > -1) {
+      const questionIndex = allQuestion[productIndex].results.findIndex(
+        (question) => Object.keys(question.answers).some(
+          (id) => id === item[1],
+        ),
       );
-      return productIndex;
+      return [productIndex, questionIndex];
     }
-    return -1;
-  } if (string === 'answer') {
-    if (allQuestion.length > 0) {
-      const productIndex = allQuestion.findIndex(
-        (element) => findQuestionIndex(element.results, item),
-      );
-      return productIndex;
-    }
-    return -1;
   }
 }
 
 function parseQuestionsCSV(questionsdata) {
   const questionsArray = questionsdata.split('\n');
-  const questionsHeaders = questionsArray.shift().split(',');
-
-  // console.log(questionsArray);
-  // console.log(questionsHeaders);
-  // console.log(questionsArray);
-
-  for (let i = 0; i < questionsArray.length; i += 1) {
+  for (let i = 1; i < questionsArray.length; i += 1) {
     const eachQuestion = questionsArray[i].split(',');
     const tempObject = {
       question_id: eachQuestion[0],
@@ -59,19 +58,13 @@ function parseQuestionsCSV(questionsdata) {
       });
     }
   }
-  console.log('allQuestion', allQuestion);
 }
 
 function parseAnswersCSV(answersData) {
   const answersArray = answersData.split('\n');
-  const answersHeaders = answersArray.shift().split(',');
-
-  // console.log(questionsArray);
-  // console.log(questionsHeaders);
-  // console.log(questionsArray);
-
-  for (let i = 0; i < answersArray.length; i += 1) {
+  for (let i = 1; i < answersArray.length; i += 1) {
     const eachAnswer = answersArray[i].split(',');
+    const answerId = eachAnswer[0];
     const tempObject = {
       answer_id: eachAnswer[0],
       body: eachAnswer[2],
@@ -80,48 +73,28 @@ function parseAnswersCSV(answersData) {
       helpfulness: eachAnswer[7],
       photos: [],
     };
-    const productIndex = findExistingProductIndex(eachAnswer);
-    if (productIndex > -1) {
-      allQuestion[productIndex].results.push(tempObject);
-    } else {
-      allQuestion.push({
-        product_id: eachAnswer[1],
-        results: [tempObject],
-      });
+    const indexArray = findExistingProductIndex(eachAnswer, 'answer');
+    if (indexArray[0] > -1) {
+      allQuestion[indexArray[0]].results[indexArray[1]].answers[answerId] = tempObject;
     }
   }
 }
 
 function parseAnswerPhotosCSV(photosData) {
-  const questionsArray = photosData.split('\n');
-  const questionsHeaders = questionsArray.shift().split(',');
-
-  // console.log(questionsArray);
-  // console.log(questionsHeaders);
-  // console.log(questionsArray);
-
-  for (let i = 0; i < questionsArray.length; i += 1) {
-    const eachQuestion = questionsArray[i].split(',');
+  const answersPhotosArray = photosData.split('\n');
+  for (let i = 1; i < answersPhotosArray.length; i += 1) {
+    const eachPhoto = answersPhotosArray[i].split(',');
+    const answerId = eachPhoto[1];
     const tempObject = {
-      question_id: eachQuestion[0],
-      question_body: eachQuestion[2],
-      question_date: eachQuestion[3],
-      asker_name: eachQuestion[4],
-      question_helpfulness: eachQuestion[7],
-      reported: eachQuestion[6],
-      answers: {},
+      id: eachPhoto[0],
+      url: eachPhoto[2],
     };
-    const productIndex = findExistingProductIndex(eachQuestion);
-    if (productIndex > -1) {
-      allQuestion[productIndex].results.push(tempObject);
-    } else {
-      allQuestion.push({
-        product_id: eachQuestion[1],
-        results: [tempObject],
-      });
+    const indexArray = findExistingProductIndex(eachPhoto, 'answer-photos') || [];
+    if (indexArray[0] > -1) {
+      allQuestion[indexArray[0]].results[indexArray[1]].answers[answerId].photos.push(tempObject);
     }
   }
-  // console.log('allQuestion', allQuestion[5]);
+  // console.log('allQuestion', allQuestion[0].results[0].answers[5].photos);
 }
 
 function parseCSV(questionsdata, answersData, photosData) {
