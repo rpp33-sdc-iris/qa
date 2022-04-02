@@ -1,4 +1,6 @@
 const { readFile } = require('fs');
+const { createReadStream } = require('fs');
+const csvParser = require('csv-parser');
 
 const express = require('express');
 
@@ -10,6 +12,8 @@ console.log(__dirname);
 const app = express();
 const port = 3000;
 
+var transformedData = [];
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
@@ -19,13 +23,42 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-readFile('./data/questions.csv', 'utf8', (questionsErr, questionsdata) => {
-  if (questionsErr) throw questionsErr;
-  readFile('./data/answers_copy.csv', 'utf8', (answersErr, answersData) => {
-    if (answersErr) throw answersErr.message;
-    readFile('./data/answers_photos_copy.csv', 'utf8', (photosErr, photosData) => {
-      if (photosErr) throw photosErr;
-      parseCSV(questionsdata, answersData, photosData);
-    });
+createReadStream('./data/questions.csv', 'utf8')
+  // .pipe(csvParser())
+  .on('data', (questionsData) => {
+    // console.log('type of data', typeof (data));
+    parseCSV(questionsData, 'questions');
+    // console.log('data', data);
+  })
+  .on('end', () => {
+    createReadStream('./data/answers.csv', 'utf8')
+    // .pipe(csvParser())
+      .on('data', (answersData) => {
+        // console.log('type of data', typeof (data));
+        parseCSV(answersData, 'answers');
+        // console.log('data', data);
+      })
+      .on('end', () => {
+        createReadStream('./data/answers_photos.csv', 'utf8')
+        // .pipe(csvParser())
+          .on('data', (answersPhotosData) => {
+            // console.log('type of data', typeof (data));
+            transformedData = parseCSV(answersPhotosData, 'answers-photos');
+            // console.log('data', data);
+          })
+          .on('end', () => {
+            console.log('data transformation complete', transformedData);
+          });
+      });
   });
-});
+
+// readFile('./data/questions.csv', 'utf8', (questionsErr, questionsdata) => {
+//   if (questionsErr) throw questionsErr;
+//   readFile('./data/answers/answers-1.csv', 'utf8', (answersErr, answersData) => {
+//     if (answersErr) throw answersErr.message;
+//     readFile('./data/answers_photos_copy.csv', 'utf8', (photosErr, photosData) => {
+//       if (photosErr) throw photosErr;
+//       parseCSV(questionsdata, answersData, photosData);
+//     });
+//   });
+// });

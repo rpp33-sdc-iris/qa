@@ -1,31 +1,31 @@
-const allQuestion = [];
+const allQuestions = [];
 
 function findExistingProductIndex(item, string) {
   if (string === 'question') {
-    const productIndex = allQuestion.findIndex(
+    const productIndex = allQuestions.findIndex(
       (element) => element.product_id === item[1],
     );
     return productIndex;
   }
 
   if (string === 'answer') {
-    const productIndex = allQuestion.findIndex(
+    const productIndex = allQuestions.findIndex(
       (product) => product.results.some((question) => question.question_id === item[1]),
     );
-    const questionIndex = allQuestion[productIndex].results.findIndex(
+    const questionIndex = allQuestions[productIndex].results.findIndex(
       (question) => question.question_id === item[1],
     );
     return [productIndex, questionIndex];
   }
 
   if (string === 'answer-photos') {
-    const productIndex = allQuestion.findIndex(
+    const productIndex = allQuestions.findIndex(
       (product) => product.results.some((question) => Object.keys(question.answers).some(
         (id) => id === item[1],
       )),
     );
     if (productIndex > -1) {
-      const questionIndex = allQuestion[productIndex].results.findIndex(
+      const questionIndex = allQuestions[productIndex].results.findIndex(
         (question) => Object.keys(question.answers).some(
           (id) => id === item[1],
         ),
@@ -36,6 +36,7 @@ function findExistingProductIndex(item, string) {
 }
 
 function parseQuestionsCSV(questionsdata) {
+  // console.log('question data', questionsdata);
   const questionsArray = questionsdata.split('\n');
   for (let i = 1; i < questionsArray.length; i += 1) {
     const eachQuestion = questionsArray[i].split(',');
@@ -50,9 +51,9 @@ function parseQuestionsCSV(questionsdata) {
     };
     const productIndex = findExistingProductIndex(eachQuestion, 'question');
     if (productIndex > -1) {
-      allQuestion[productIndex].results.push(tempObject);
+      allQuestions[productIndex].results.push(tempObject);
     } else {
-      allQuestion.push({
+      allQuestions.push({
         product_id: eachQuestion[1],
         results: [tempObject],
       });
@@ -75,7 +76,7 @@ function parseAnswersCSV(answersData) {
     };
     const indexArray = findExistingProductIndex(eachAnswer, 'answer');
     if (indexArray[0] > -1) {
-      allQuestion[indexArray[0]].results[indexArray[1]].answers[answerId] = tempObject;
+      allQuestions[indexArray[0]].results[indexArray[1]].answers[answerId] = tempObject;
     }
   }
 }
@@ -91,16 +92,25 @@ function parseAnswerPhotosCSV(photosData) {
     };
     const indexArray = findExistingProductIndex(eachPhoto, 'answer-photos') || [];
     if (indexArray[0] > -1) {
-      allQuestion[indexArray[0]].results[indexArray[1]].answers[answerId].photos.push(tempObject);
+      allQuestions[indexArray[0]].results[indexArray[1]].answers[answerId].photos.push(tempObject);
     }
   }
-  // console.log('allQuestion', allQuestion[0].results[0].answers[5].photos);
+  // console.log('allQuestions', allQuestions[0].results[0].answers[5].photos);
 }
 
-function parseCSV(questionsdata, answersData, photosData) {
-  parseQuestionsCSV(questionsdata);
-  parseAnswersCSV(answersData);
-  parseAnswerPhotosCSV(photosData);
+function parseCSV(data, string) {
+  if (string === 'questions') {
+    parseQuestionsCSV(data);
+  } else if (string === 'answers') {
+    parseAnswersCSV(data);
+  } else if (string === 'answers-photos') {
+    parseAnswerPhotosCSV(data);
+  }
+
+  // parseAnswersCSV(answersData);
+  // parseAnswerPhotosCSV(photosData);
+  // return allQuestions;
+  // console.log('final array', allQuestions);
 }
 
 module.exports = parseCSV;
