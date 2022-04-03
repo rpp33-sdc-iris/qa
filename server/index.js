@@ -1,10 +1,9 @@
 const { readFile } = require('fs');
 const { createReadStream } = require('fs');
 const csvParser = require('csv-parser');
-
 const express = require('express');
-
 const parseCSV = require('./helpers/parseCSV');
+const questions = require('../database/index');
 
 // eslint-disable-next-line no-console
 console.log(__dirname);
@@ -12,7 +11,10 @@ console.log(__dirname);
 const app = express();
 const port = 3000;
 
-var transformedData = [];
+let transformedData = [];
+let transformedQuestionsData = [];
+let transformedAnswersData = [];
+let transformedAnswersPhotosData = [];
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -27,15 +29,15 @@ createReadStream('./data/questions.csv', 'utf8')
   // .pipe(csvParser())
   .on('data', (questionsData) => {
     // console.log('type of data', typeof (data));
-    parseCSV(questionsData, 'questions');
-    // console.log('data', data);
+    transformedQuestionsData = parseCSV(questionsData, 'questions');
   })
   .on('end', () => {
+    console.log('questions data', transformedQuestionsData);
     createReadStream('./data/answers.csv', 'utf8')
     // .pipe(csvParser())
       .on('data', (answersData) => {
         // console.log('type of data', typeof (data));
-        parseCSV(answersData, 'answers');
+        // transformedAnswersData = parseCSV(answersData, 'answers');
         // console.log('data', data);
       })
       .on('end', () => {
@@ -43,7 +45,7 @@ createReadStream('./data/questions.csv', 'utf8')
         // .pipe(csvParser())
           .on('data', (answersPhotosData) => {
             // console.log('type of data', typeof (data));
-            transformedData = parseCSV(answersPhotosData, 'answers-photos');
+            // transformedData = parseCSV(answersPhotosData, 'answers-photos');
             // console.log('data', data);
           })
           .on('end', () => {

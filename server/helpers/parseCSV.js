@@ -1,5 +1,9 @@
 const allQuestions = [];
 
+let questionsTransformed = false;
+let answersTransformed = false;
+let answersPhotosTransformed = false;
+
 function findExistingProductIndex(item, string) {
   if (string === 'question') {
     const productIndex = allQuestions.findIndex(
@@ -59,9 +63,11 @@ function parseQuestionsCSV(questionsdata) {
       });
     }
   }
+  questionsTransformed = true;
 }
 
 function parseAnswersCSV(answersData) {
+  console.log('answers data', answersData);
   const answersArray = answersData.split('\n');
   for (let i = 1; i < answersArray.length; i += 1) {
     const eachAnswer = answersArray[i].split(',');
@@ -79,9 +85,11 @@ function parseAnswersCSV(answersData) {
       allQuestions[indexArray[0]].results[indexArray[1]].answers[answerId] = tempObject;
     }
   }
+  answersTransformed = true;
 }
 
 function parseAnswerPhotosCSV(photosData) {
+  console.log('answers photos data', photosData);
   const answersPhotosArray = photosData.split('\n');
   for (let i = 1; i < answersPhotosArray.length; i += 1) {
     const eachPhoto = answersPhotosArray[i].split(',');
@@ -96,21 +104,21 @@ function parseAnswerPhotosCSV(photosData) {
     }
   }
   // console.log('allQuestions', allQuestions[0].results[0].answers[5].photos);
+  answersPhotosTransformed = true;
 }
 
 function parseCSV(data, string) {
   if (string === 'questions') {
-    parseQuestionsCSV(data);
-  } else if (string === 'answers') {
-    parseAnswersCSV(data);
-  } else if (string === 'answers-photos') {
-    parseAnswerPhotosCSV(data);
+    return parseQuestionsCSV(data);
+  } if (string === 'answers') {
+    return parseAnswersCSV(data);
+  } if (string === 'answers-photos') {
+    return parseAnswerPhotosCSV(data);
   }
 
-  // parseAnswersCSV(answersData);
-  // parseAnswerPhotosCSV(photosData);
-  // return allQuestions;
-  // console.log('final array', allQuestions);
+  if (questionsTransformed && answersTransformed && answersPhotosTransformed) {
+    return allQuestions;
+  }
 }
 
 module.exports = parseCSV;
