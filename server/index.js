@@ -12,35 +12,58 @@ const app = express();
 const port = 3000;
 
 app.get('/qa/questions', (req, res) => {
-  getQuestions(req);
+  const id = req.query.product_id;
+  const { count } = req.query;
+  const { page } = req.query;
+
+  console.log(id, count, page);
+
+  getQuestions(req, res).then((questions) => {
+    // console.log('questions in server', questions);
+    res.status('200').send(questions);
+  });
 });
 
 app.get('/qa/questions/:question_id/answers', (req, res) => {
-  getAnswers(req);
+  const id = req.params.question_id;
+  const count = req.query.count || 5;
+  const page = req.query.page || 1;
+
+  // console.log(count);
+
+  getAnswers(req, res).then((answers) => {
+    // console.log('questions in server', questions);
+    res.status('200').send({
+      question: id,
+      page,
+      count,
+      results: answers.results,
+    });
+  });
 });
 
 app.post('/qa/questions', (req, res) => {
-  addQuestion(req);
+  addQuestion(req, res);
 });
 
 app.post('/qa/questions/:question_id/answers', (req, res) => {
-  addAnswer(req);
+  addAnswer(req, res);
 });
 
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
-  markQuestionHelpful(req);
+  markQuestionHelpful(req, res);
 });
 
 app.put('/qa/questions/:question_id/report', (req, res) => {
-  reportQuestion(req);
+  reportQuestion(req, res);
 });
 
 app.put('/qa/answers/:answer_id/helpful', (req, res) => {
-  markAnswerHelpful(req);
+  markAnswerHelpful(req, res);
 });
 
 app.put('/qa/answers/:answer_id/report', (req, res) => {
-  reportAnswer(req);
+  reportAnswer(req, res);
 });
 
 app.listen(port, () => {
