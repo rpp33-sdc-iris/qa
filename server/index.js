@@ -58,19 +58,48 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
 });
 
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
-  markQuestionHelpful(req, res);
+  // console.log('this function was invoked');
+  markQuestionHelpful(req, res).then((markedQuestionHelpful) => {
+    // console.log('returned value', markedQuestionHelpful);
+    if (markedQuestionHelpful) {
+      res.status('204').send('Marked Helpful');
+    } else {
+      res.status('400').send('Error in marking question helpful');
+    }
+  });
 });
 
 app.put('/qa/questions/:question_id/report', (req, res) => {
-  reportQuestion(req, res);
+  reportQuestion(req, res).then((questionReported) => {
+    // console.log('returned value', questionReported);
+    if (questionReported) {
+      res.status('204').send('Question Reported');
+    } else {
+      res.status('400').send('Error in reporting question');
+    }
+  });
 });
 
 app.put('/qa/answers/:answer_id/helpful', (req, res) => {
-  markAnswerHelpful(req, res);
+  markAnswerHelpful(req, res).then((markedAnswerHelpful) => {
+    // console.log('returned value', markedAnswerHelpful);
+    if (markedAnswerHelpful) {
+      res.status('204').send('Marked Helpful');
+    } else {
+      res.status('400').send('Error in marking answer helpful');
+    }
+  });
 });
 
 app.put('/qa/answers/:answer_id/report', (req, res) => {
-  reportAnswer(req, res);
+  reportAnswer(req, res).then((answerReported) => {
+    // console.log('returned value', answerReported);
+    if (answerReported) {
+      res.status('204').send('Answer Reported');
+    } else {
+      res.status('400').send('Error in reporting answer');
+    }
+  });
 });
 
 app.listen(port, () => {

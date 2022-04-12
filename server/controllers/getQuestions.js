@@ -83,7 +83,7 @@ const getQuestions = async (req, res) => {
               input: '$results',
               cond: {
                 $eq: [
-                  '$$this.reported', true,
+                  '$$this.reported', false,
                 ],
               },
             },

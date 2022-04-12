@@ -38,7 +38,7 @@ const getAnswers = async (req, res) => {
               input: '$answers',
               cond: {
                 $eq: [
-                  '$$this.reported', true,
+                  '$$this.reported', false,
                 ],
               },
             },
