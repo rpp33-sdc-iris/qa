@@ -16,7 +16,7 @@ connectDb(() => {
 // const QuestionsCollection = db.collection('questions');
 
 const getQuestions = async (req, res) => {
-  const id = Number(req.query.product_id);
+  const productId = Number(req.query.product_id);
   const { count } = req.query || 5;
   const { page } = req.query || 1;
 
@@ -24,7 +24,7 @@ const getQuestions = async (req, res) => {
     const questions = await QuestionsCollection.aggregate([
       {
         $match: {
-          product_id: id,
+          product_id: productId,
         },
       }, {
         $project: {
@@ -83,7 +83,7 @@ const getQuestions = async (req, res) => {
               input: '$results',
               cond: {
                 $eq: [
-                  '$$this.reported', true,
+                  '$$this.reported', false,
                 ],
               },
             },

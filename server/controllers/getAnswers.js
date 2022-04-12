@@ -8,7 +8,7 @@ connectDb(() => {
 });
 
 const getAnswers = async (req, res) => {
-  const id = Number(req.params.question_id);
+  const questionId = Number(req.params.question_id);
   const { count } = req.query || 5;
   const { page } = req.query || 1;
 
@@ -16,7 +16,7 @@ const getAnswers = async (req, res) => {
     const answers = await QuestionsCollection.aggregate([
       {
         $match: {
-          question_id: id,
+          question_id: questionId,
         },
       }, {
         $project: {
@@ -38,7 +38,7 @@ const getAnswers = async (req, res) => {
               input: '$answers',
               cond: {
                 $eq: [
-                  '$$this.reported', true,
+                  '$$this.reported', false,
                 ],
               },
             },
