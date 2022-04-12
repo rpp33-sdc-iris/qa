@@ -16,7 +16,7 @@ app.get('/qa/questions', (req, res) => {
   const { count } = req.query;
   const { page } = req.query;
 
-  console.log(id, count, page);
+  // console.log(id, count, page);
 
   getQuestions(req, res).then((questions) => {
     // console.log('questions in server', questions);
@@ -43,7 +43,14 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
 });
 
 app.post('/qa/questions', (req, res) => {
-  addQuestion(req, res);
+  addQuestion(req, res).then((questionAdded) => {
+    console.log('returned value', questionAdded);
+    if (questionAdded) {
+      res.status('201').send('201 CREATED');
+    } else {
+      res.status('400').send('Error in adding question');
+    }
+  });
 });
 
 app.post('/qa/questions/:question_id/answers', (req, res) => {
