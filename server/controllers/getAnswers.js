@@ -71,6 +71,7 @@ const getAnswers = async (req, res) => {
     return as;
   } catch (error) {
     console.log('error in finding answers', error);
+    return error;
   }
   // returns a list of answers for a given question_id
   // does not include any reported answers

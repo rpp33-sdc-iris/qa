@@ -7,14 +7,6 @@ connectDb(() => {
   // console.log('questions collection accessed', QuestionsCollection);
 });
 
-// connectDb();
-
-// getDb().then((db) => {
-//   QuestionsCollection = db.collection('questions');
-// });
-
-// const QuestionsCollection = db.collection('questions');
-
 const getQuestions = async (req, res) => {
   const productId = Number(req.query.product_id);
   const { count } = req.query || 5;
@@ -105,6 +97,7 @@ const getQuestions = async (req, res) => {
     return qs;
   } catch (error) {
     console.log('error in finding questions', error);
+    return error;
   }
 
   // returns a list of questions for a particular product
