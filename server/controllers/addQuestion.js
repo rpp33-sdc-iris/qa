@@ -8,10 +8,10 @@ connectDb(() => {
 });
 
 const addQuestion = async (req, res) => {
-  // const productId = Number(req.params.product_id);
-  // const { questionBody } = req.body.body;
-  // const { askerName } = req.body.name;
-  // const { askerEmail } = req.body.email;
+  const productId = Number(req.query.product_id);
+  const questionBody = req.body.body;
+  const askerName = req.body.name;
+  const askerEmail = req.body.email;
   // Adds a question for the given product_id
   // question contains - question_body, asker_name, asker_email
 
@@ -30,11 +30,11 @@ const addQuestion = async (req, res) => {
 
   try {
     const added = await QuestionsCollection.insertOne({
-      product_id: 10,
+      product_id: productId,
       question_id: questionId,
-      question_body: 'What fabric is the top made of?',
-      asker_name: 'yankeelover',
-      asker_email: 'yankeelover@gmail.com',
+      question_body: questionBody,
+      asker_name: askerName,
+      asker_email: askerEmail,
     });
     return added.acknowledged;
   } catch (error) {

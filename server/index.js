@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const addAnswer = require('./controllers/addAnswer');
 const addQuestion = require('./controllers/addQuestion');
 const getAnswers = require('./controllers/getAnswers');
@@ -11,6 +12,9 @@ const reportQuestion = require('./controllers/reportQuestion');
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/qa/questions', (req, res) => {
   const id = req.query.product_id;
   const { count } = req.query;
@@ -20,7 +24,15 @@ app.get('/qa/questions', (req, res) => {
 
   getQuestions(req, res).then((questions) => {
     // console.log('questions in server', questions);
-    res.status('200').send(questions);
+
+    if (questions) {
+      res.status('200').json({
+        product_id: questions.product_id,
+        results: questions.results,
+      });
+    } else {
+      res.status('400').send(new Error());
+    }
   });
 });
 
@@ -32,19 +44,23 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
   // console.log(count);
 
   getAnswers(req, res).then((answers) => {
-    // console.log('questions in server', questions);
-    res.status('200').send({
-      question: id,
-      page,
-      count,
-      results: answers.results,
-    });
+    if (answers) {
+      res.status('200').json({
+        question: id,
+        page,
+        count,
+        results: answers.results,
+      });
+    } else {
+      res.status('400').send(new Error());
+    }
   });
 });
 
 app.post('/qa/questions', (req, res) => {
+  // console.log('req', req.body);
   addQuestion(req, res).then((questionAdded) => {
-    console.log('returned value', questionAdded);
+    // console.log('returned value', questionAdded);
     if (questionAdded) {
       res.status('201').send('201 CREATED');
     } else {
