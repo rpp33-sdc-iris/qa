@@ -8,7 +8,7 @@ connectDb(() => {
 });
 
 const addQuestion = async (req, res) => {
-  const productId = Number(req.body.product_id);
+  const productId = Number(req.body.product_id) - 64619;
   const questionBody = req.body.body;
   const askerName = req.body.name;
   const askerEmail = req.body.email;

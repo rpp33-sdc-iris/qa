@@ -10,8 +10,8 @@ connectDb(() => {
 const getQuestions = async (req, res) => {
   // console.log('req params', req.params);
 
-  // console.log('req query', req.query);
-  const productId = Number(req.query.product_id) - 64619;
+  console.log('req query', req.query);
+  let productId = Number(req.query.product_id) - 64619;
   const { count } = req.query || 5;
   const { page } = req.query || 1;
 
@@ -101,10 +101,11 @@ const getQuestions = async (req, res) => {
       },
     ]);
     const questions = await questionsPromise.next();
+    productId = Number(req.query.product_id) + 64619;
     // console.log('questions', questions);
     if (questions) {
       res.status(200).json({
-        product_id: questions.product_id,
+        product_id: productId,
         results: questions.results,
       });
     } else {
