@@ -13,18 +13,28 @@ const reportAnswer = async (req, res) => {
   // but the question will not be returned in a GET request
 
   const answerId = Number(req.params.answer_id);
+  // console.log('answerId', answerId);
+
+  if (Number.isNaN(answerId)) {
+    res.status(400).send('answerId should be a number');
+    return;
+  }
 
   try {
     const reported = await QuestionsCollection.updateOne(
-      { },
-      { $set: { 'answers.$[answer].reported': true } },
-      { arrayFilters: [{ 'answer.id': { $eq: answerId } }] },
+      { 'answers.id': answerId },
+      { $set: { 'answers.$.reported': true } },
+      // { arrayFilters: [{ 'elem.id': { $eq: answerId } }] },
     );
     // console.log('reported', reported);
-    return reported.acknowledged;
+    if (reported.modifiedCount !== 0) {
+      res.status(204).send('Answer Reported');
+    } else {
+      res.status(400).send('Error in reporting the answer');
+    }
   } catch (error) {
     console.log('error in updating document', error);
-    return false;
+    res.status(500).send('Database server error');
   }
 };
 
