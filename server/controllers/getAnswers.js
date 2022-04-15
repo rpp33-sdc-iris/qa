@@ -12,8 +12,13 @@ const getAnswers = async (req, res) => {
   const { count } = req.query || 5;
   const { page } = req.query || 1;
 
+  if (Number.isNaN(questionId)) {
+    res.status(400).send('Question_id should be a number');
+    return;
+  }
+
   try {
-    const answers = await QuestionsCollection.aggregate([
+    const answersPromise = await QuestionsCollection.aggregate([
       {
         $match: {
           question_id: questionId,
@@ -66,12 +71,21 @@ const getAnswers = async (req, res) => {
         },
       },
     ]);
-    const as = await answers.next();
-    // console.log('questions', qs);
-    return as;
+    const answers = await answersPromise.next();
+    console.log('answers', answers);
+    if (answers) {
+      res.status(200).json({
+        question: questionId,
+        page,
+        count,
+        results: answers.results,
+      });
+    } else {
+      res.status(400).send('Answers data for Question_id does not exist. Check Question_id');
+    }
   } catch (error) {
     console.log('error in finding answers', error);
-    return error;
+    res.status(500).send('Database server error');
   }
   // returns a list of answers for a given question_id
   // does not include any reported answers

@@ -8,12 +8,20 @@ connectDb(() => {
 });
 
 const getQuestions = async (req, res) => {
-  const productId = Number(req.query.product_id);
+  // console.log('req params', req.params);
+
+  // console.log('req query', req.query);
+  const productId = Number(req.query.product_id) - 64619;
   const { count } = req.query || 5;
   const { page } = req.query || 1;
 
+  if (Number.isNaN(productId)) {
+    res.status(400).send('Product_id should be a number');
+    return;
+  }
+
   try {
-    const questions = await QuestionsCollection.aggregate([
+    const questionsPromise = await QuestionsCollection.aggregate([
       {
         $match: {
           product_id: productId,
@@ -92,12 +100,19 @@ const getQuestions = async (req, res) => {
         },
       },
     ]);
-    const qs = await questions.next();
-    // console.log('questions', qs);
-    return qs;
+    const questions = await questionsPromise.next();
+    // console.log('questions', questions);
+    if (questions) {
+      res.status(200).json({
+        product_id: questions.product_id,
+        results: questions.results,
+      });
+    } else {
+      res.status(400).send('Questions data for Product_id does not exist. Check Product_id');
+    }
   } catch (error) {
     console.log('error in finding questions', error);
-    return error;
+    res.status(500).send('Database server error');
   }
 
   // returns a list of questions for a particular product

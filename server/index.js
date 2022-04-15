@@ -10,112 +10,29 @@ const reportAnswer = require('./controllers/reportAnswer');
 const reportQuestion = require('./controllers/reportQuestion');
 
 const app = express();
-const port = 3000;
+const port = 5000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/qa/questions', (req, res) => {
-  const id = req.query.product_id;
-  const { count } = req.query;
-  const { page } = req.query;
+app.get('/qa/questions', getQuestions);
 
-  // console.log(id, count, page);
+app.get('/qa/questions/:question_id/answers', getAnswers);
 
-  getQuestions(req, res).then((questions) => {
-    // console.log('questions in server', questions);
+app.post('/qa/questions', addQuestion);
 
-    if (questions) {
-      res.status('200').json({
-        product_id: questions.product_id,
-        results: questions.results,
-      });
-    } else {
-      res.status('400').send(new Error());
-    }
-  });
-});
+app.post('/qa/questions/:question_id/answers', addAnswer);
 
-app.get('/qa/questions/:question_id/answers', (req, res) => {
-  const id = req.params.question_id;
-  const count = req.query.count || 5;
-  const page = req.query.page || 1;
+app.put('/qa/questions/:question_id/helpful', markQuestionHelpful);
 
-  // console.log(count);
+app.put('/qa/questions/:question_id/report', reportQuestion);
 
-  getAnswers(req, res).then((answers) => {
-    if (answers) {
-      res.status('200').json({
-        question: id,
-        page,
-        count,
-        results: answers.results,
-      });
-    } else {
-      res.status('400').send(new Error());
-    }
-  });
-});
+app.put('/qa/answers/:answer_id/helpful', markAnswerHelpful);
 
-app.post('/qa/questions', (req, res) => {
-  // console.log('req', req.body);
-  addQuestion(req, res).then((questionAdded) => {
-    // console.log('returned value', questionAdded);
-    if (questionAdded) {
-      res.status('201').send('201 CREATED');
-    } else {
-      res.status('400').send('Error in adding question');
-    }
-  });
-});
+app.put('/qa/answers/:answer_id/report', reportAnswer);
 
-app.post('/qa/questions/:question_id/answers', (req, res) => {
-  addAnswer(req, res);
-});
-
-app.put('/qa/questions/:question_id/helpful', (req, res) => {
-  // console.log('this function was invoked');
-  markQuestionHelpful(req, res).then((markedQuestionHelpful) => {
-    // console.log('returned value', markedQuestionHelpful);
-    if (markedQuestionHelpful) {
-      res.status('204').send('Marked Helpful');
-    } else {
-      res.status('400').send('Error in marking question helpful');
-    }
-  });
-});
-
-app.put('/qa/questions/:question_id/report', (req, res) => {
-  reportQuestion(req, res).then((questionReported) => {
-    // console.log('returned value', questionReported);
-    if (questionReported) {
-      res.status('204').send('Question Reported');
-    } else {
-      res.status('400').send('Error in reporting question');
-    }
-  });
-});
-
-app.put('/qa/answers/:answer_id/helpful', (req, res) => {
-  markAnswerHelpful(req, res).then((markedAnswerHelpful) => {
-    // console.log('returned value', markedAnswerHelpful);
-    if (markedAnswerHelpful) {
-      res.status('204').send('Marked Helpful');
-    } else {
-      res.status('400').send('Error in marking answer helpful');
-    }
-  });
-});
-
-app.put('/qa/answers/:answer_id/report', (req, res) => {
-  reportAnswer(req, res).then((answerReported) => {
-    // console.log('returned value', answerReported);
-    if (answerReported) {
-      res.status('204').send('Answer Reported');
-    } else {
-      res.status('400').send('Error in reporting answer');
-    }
-  });
+app.get('/', (req, res) => {
+  console.log('yo');
 });
 
 app.listen(port, () => {

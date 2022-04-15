@@ -12,6 +12,12 @@ const markQuestionHelpful = async (req, res) => {
   // Updates a question to show it was found helpful
   // console.log('req', req.params);
   // console.log('questionId', questionId);
+
+  if (Number.isNaN(questionId)) {
+    res.status(400).send('questionId should be a number');
+    return;
+  }
+
   try {
     const markedHelpful = await QuestionsCollection.updateOne({
       question_id: questionId,
@@ -20,10 +26,16 @@ const markQuestionHelpful = async (req, res) => {
         question_helpfulness: 1,
       },
     });
-    return markedHelpful.acknowledged;
+    // console.log(markedHelpful);
+
+    if (markedHelpful.modifiedCount !== 0) {
+      res.status(204).send('Question Marked Helpful');
+    } else {
+      res.status(400).send('Error in marking question helpful');
+    }
   } catch (error) {
     console.log('error in updating document', error);
-    return false;
+    res.status(500).send('Database server error');
   }
 };
 
