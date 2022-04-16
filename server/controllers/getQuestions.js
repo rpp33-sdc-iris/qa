@@ -10,7 +10,7 @@ connectDb(() => {
 const getQuestions = async (req, res) => {
   // console.log('req params', req.params);
 
-  console.log('req query', req.query);
+  // console.log('req query', req.query);
   let productId = Number(req.query.product_id) - 64619;
   const { count } = req.query || 5;
   const { page } = req.query || 1;

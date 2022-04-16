@@ -14,7 +14,8 @@ const addQuestion = async (req, res) => {
   const askerEmail = req.body.email;
   // Adds a question for the given product_id
   // question contains - question_body, asker_name, asker_email
-  // console.log('req', req);
+  console.log('product Id', productId);
+  console.log('req body', req.body);
 
   if (Number.isNaN(productId)) {
     res.status(400).send('Product_id should be a number');

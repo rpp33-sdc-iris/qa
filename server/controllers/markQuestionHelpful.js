@@ -11,7 +11,7 @@ const markQuestionHelpful = async (req, res) => {
   const questionId = Number(req.params.question_id);
   // Updates a question to show it was found helpful
   // console.log('req', req.params);
-  console.log('questionId', questionId);
+  // console.log('questionId', questionId);
 
   if (Number.isNaN(questionId)) {
     res.status(400).send('questionId should be a number');
@@ -26,10 +26,10 @@ const markQuestionHelpful = async (req, res) => {
         question_helpfulness: 1,
       },
     });
-    console.log(markedHelpful);
+    // console.log(markedHelpful);
 
     if (markedHelpful.modifiedCount !== 0) {
-      res.status(204).send('question marked helpful');
+      res.status(204).end();
     } else {
       res.status(400).send('Error in marking question helpful');
     }

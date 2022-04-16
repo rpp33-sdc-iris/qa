@@ -12,6 +12,13 @@ const reportQuestion = require('./controllers/reportQuestion');
 const app = express();
 const port = 5000;
 
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin", "http://localhost:5000');
+  // res.header('Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE');
+  // res.header('Content-Type: application/json');
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
