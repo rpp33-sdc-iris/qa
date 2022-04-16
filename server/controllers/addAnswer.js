@@ -25,7 +25,7 @@ const addAnswer = async (req, res) => {
 
   // console.log('req params', req.params);
   // console.log('req query', req.query);
-  // console.log('req body', req);
+  console.log('que', req);
 
   if (Number.isNaN(questionId)) {
     res.status(400).send('questionId should be a number');

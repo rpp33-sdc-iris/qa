@@ -29,7 +29,7 @@ const markQuestionHelpful = async (req, res) => {
     // console.log(markedHelpful);
 
     if (markedHelpful.modifiedCount !== 0) {
-      res.status(204).send('Question Marked Helpful');
+      res.status(204).end();
     } else {
       res.status(400).send('Error in marking question helpful');
     }
