@@ -101,7 +101,7 @@ const getQuestions = async (req, res) => {
       },
     ]);
     const questions = await questionsPromise.next();
-    productId = Number(req.query.product_id) + 64619;
+    productId += 64619;
     // console.log('questions', questions);
     if (questions) {
       res.status(200).json({

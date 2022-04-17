@@ -72,7 +72,7 @@ const getAnswers = async (req, res) => {
       },
     ]);
     const answers = await answersPromise.next();
-    console.log('answers', answers);
+    // console.log('answers', answers);
     if (answers) {
       res.status(200).json({
         question: questionId,

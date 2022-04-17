@@ -7,7 +7,8 @@
     "verbose": true,
     "testEnvironment": "node",
     "collectCoverage": true,
-    "collectCoverageFrom": ["./server/index.js"]
+    "collectCoverageFrom": ["./server/index.js"],
+    "testTimeout": 100000
   },
   "scripts": {
     "test": " node --experimental-vm-modules node_modules/.bin/jest --coverage",
