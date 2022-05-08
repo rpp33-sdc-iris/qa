@@ -106,8 +106,9 @@ dist
 # DS store
 .DS_Store
 
-# API Token config file
+# API Token config file and PEM file
 config.js
+.pem
 
 # API Data
 data/

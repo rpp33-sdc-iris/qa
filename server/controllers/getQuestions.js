@@ -8,6 +8,7 @@ connectDb(() => {
 });
 
 const getQuestions = async (req, res) => {
+  // console.log('getQuestions was invoked');
   // console.log('req params', req.params);
 
   // console.log('req query', req.query);
@@ -19,6 +20,8 @@ const getQuestions = async (req, res) => {
     res.status(400).send('Product_id should be a number');
     return;
   }
+
+  console.log('product_id', productId);
 
   try {
     const questionsPromise = await QuestionsCollection.aggregate([
@@ -109,11 +112,14 @@ const getQuestions = async (req, res) => {
         results: questions.results,
       });
     } else {
-      res.status(400).send('Questions data for Product_id does not exist. Check Product_id');
+      res.status(200).json({
+        product_id: productId,
+        results: [],
+      });
     }
   } catch (error) {
     console.log('error in finding questions', error);
-    res.status(500).send('Database server error');
+    res.status(500).send('Database Server Error');
   }
 
   // returns a list of questions for a particular product

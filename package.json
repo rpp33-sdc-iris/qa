@@ -7,7 +7,9 @@
     "verbose": true,
     "testEnvironment": "node",
     "collectCoverage": true,
-    "collectCoverageFrom": ["./server/index.js"],
+    "collectCoverageFrom": [
+      "./server/index.js"
+    ],
     "testTimeout": 100000
   },
   "scripts": {
@@ -28,7 +30,9 @@
     "assert": "^2.0.0",
     "body-parser": "^1.20.0",
     "csv-parser": "^3.0.0",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "loaderio": "^0.0.3",
     "mongodb": "^4.5.0",
     "mongoose": "^6.2.9",
     "nodemon": "^2.0.15",
