@@ -16,6 +16,7 @@ const getAnswers = async (req, res) => {
     res.status(400).send('Question_id should be a number');
     return;
   }
+  console.log('questionId', questionId);
 
   try {
     const answersPromise = await QuestionsCollection.aggregate([
@@ -72,7 +73,7 @@ const getAnswers = async (req, res) => {
       },
     ]);
     const answers = await answersPromise.next();
-    console.log('answers', answers);
+    // console.log('answers', answers);
     if (answers) {
       res.status(200).json({
         question: questionId,
@@ -81,7 +82,12 @@ const getAnswers = async (req, res) => {
         results: answers.results,
       });
     } else {
-      res.status(400).send('Answers data for Question_id does not exist. Check Question_id');
+      res.status(200).json({
+        question: questionId,
+        page,
+        count,
+        results: [],
+      });
     }
   } catch (error) {
     console.log('error in finding answers', error);

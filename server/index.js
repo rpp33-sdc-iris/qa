@@ -10,10 +10,10 @@ const reportAnswer = require('./controllers/reportAnswer');
 const reportQuestion = require('./controllers/reportQuestion');
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 app.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin", "http://localhost:5000');
+  res.header('Access-Control-Allow-Origin", "http://localhost:3000');
   // res.header('Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE');
   // res.header('Content-Type: application/json');
   next();
@@ -38,8 +38,12 @@ app.put('/qa/answers/:answer_id/helpful', markAnswerHelpful);
 
 app.put('/qa/answers/:answer_id/report', reportAnswer);
 
+app.get('/loaderio-66a6283d1ae4934a01dfe839a5a67f26', (req, res) => {
+  res.send('loaderio-66a6283d1ae4934a01dfe839a5a67f26');
+});
+
 app.get('/', (req, res) => {
-  console.log('yo');
+  console.log('Welcome to SDC');
 });
 
 app.listen(port, () => {

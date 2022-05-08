@@ -12,7 +12,7 @@ const superagent = require('superagent');
 // const reportQuestion = require('../server/controllers/reportQuestion');
 const server = require('../server/index');
 
-request = request('http://localhost:3000');
+request = request('http://localhost:5000');
 
 const randomNumber = Math.floor(Math.random() * (100000 - 90000) + 90000);
 
@@ -37,39 +37,40 @@ describe('Vaild API calls', () => {
     });
   });
   describe('PUT - Mark Question Helpful', () => {
-    // it('marks a valid question helpful', (done) => {
-    //   request
-    //     .put('/qa/questions/96/helpful')
-    //     .set('Accept', 'application/json')
-    //     .expect('Content-Type', /json/)
-    //     .expect(204)
-    //     .end((err, res) => {
-    //       if (err) {
-    //         console.log('err', err);
-    //       } else {
-    //         console.log('res.statusCode', res.statusCode);
-    //         expect(res.statusCode).to.be.equal(204);
-    //       }
-    //       done();
-    //     });
-    // });
+    it('marks a valid question helpful', (done) => {
+      request
+        .put('/qa/questions/96/helpful')
+        .set('Accept', 'application/json')
+        // .expect('Content-Type', /json/)
+        .expect(204)
+        .end((err, res) => {
+          if (err) {
+            console.log('err', err);
+          } else {
+            // console.log('response', res);
+            console.log('res.statusCode', res.statusCode);
+            expect(res.statusCode).to.be.equal(204);
+          }
+          done();
+        });
+    });
   });
   describe('PUT - Report a Question', () => {
-    // it('reports a valid question', (done) => {
-    //   request
-    //     .put('/qa/questions/874/report')
-    //     .set('Accept', 'application/json')
-    //     .expect('Content-Type', /text/)
-    //     .expect(204)
-    //     .end((err, res) => {
-    //       if (err) {
-    //         console.log('err', err);
-    //       } else {
-    //         expect(res.statusCode).to.be.equal(204);
-    //       }
-    //       done();
-    //     });
-    // });
+    it('reports a valid question', (done) => {
+      request
+        .put('/qa/questions/74/report')
+        .set('Accept', 'application/json')
+        // .expect('Content-Type', /text/)
+        .expect(204)
+        .end((err, res) => {
+          if (err) {
+            console.log('err', err);
+          } else {
+            expect(res.statusCode).to.be.equal(204);
+          }
+          done();
+        });
+    });
   });
   describe('PUT - Mark Answer Helpful', () => {
     // it('marks a valid answer helpful', (done) => {
@@ -153,6 +154,7 @@ describe('Vaild API calls', () => {
 
 describe('Error handling for API calls', () => {
   describe('GET Questions', () => {
+    // this.timeout(10000);
     it('responds with error for invalid product', (done) => {
       request
         .get('/qa/questions/?product_id=null')
@@ -170,6 +172,7 @@ describe('Error handling for API calls', () => {
     });
   });
   describe('GET Answers', () => {
+    // this.timeout(10000);
     it('responds with error for invalid question_id', (done) => {
       request
         .get('/qa/questions/null/answers')
@@ -187,6 +190,7 @@ describe('Error handling for API calls', () => {
     });
   });
   describe('PUT - Mark Question Helpful', () => {
+    // this.timeout(10000);
     it('Does not mark invalid question helpful and throws error', (done) => {
       request
         .put('/qa/questions/null/helpful')
@@ -220,6 +224,7 @@ describe('Error handling for API calls', () => {
     });
   });
   describe('PUT - Report a Question', () => {
+    // this.timeout(10000);
     it('Does not report an invalid question and throws error', (done) => {
       request
         .put('/qa/questions/null/report')
@@ -253,6 +258,7 @@ describe('Error handling for API calls', () => {
     });
   });
   describe('PUT - Mark Answer Helpful', () => {
+    // this.timeout(10000);
     it('Does not mark invalid answer helpful and throws error', (done) => {
       request
         .put('/qa/answers/null/helpful')
@@ -286,6 +292,7 @@ describe('Error handling for API calls', () => {
     });
   });
   describe('PUT - Report an Answer', () => {
+    // this.timeout(10000);
     it('Does not report an invalid answer and throws error', (done) => {
       request
         .put('/qa/answers/null/report')
