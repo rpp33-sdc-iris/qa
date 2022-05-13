@@ -45,13 +45,14 @@ $ npm run server
 - [x]  Error rate: <1% rate
 
 # API Endpoints
-This API service is serving Questions & Answers data to the front-end of an e-commerce website. Listed below are the endpoints routes built, serving data from a Mongodb database with data loaded from .csv files.
+This API service serves Questions & Answers data to the front-end of an e-commerce website. Listed below are the endpoints routes built, serving data from a Mongodb database with data loaded from .csv files.
 
 # Questions and Answers API
 ### List Questions
 
 `GET /qa/questions`
 Retrieves a list of questions for a particular product.  This list *does not* include any reported questions.
+Range of valid product ids - [64620, 97000]
 
 Parameters
 
